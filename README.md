@@ -1,6 +1,6 @@
 # tap-getresponse
 
-`tap-getresponse` is a Singer tap for GetResponse.
+`tap-getresponse` is a Singer tap for [GetResponse API](https://apireference.getresponse.com/)
 
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
 
