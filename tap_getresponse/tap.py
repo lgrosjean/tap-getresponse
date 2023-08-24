@@ -5,7 +5,6 @@ from __future__ import annotations
 from singer_sdk import Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
-# TODO: Import your custom stream types here:
 from tap_getresponse import streams
 
 
@@ -14,7 +13,6 @@ class TapGetResponse(Tap):
 
     name = "tap-getresponse"
 
-    # TODO: Update this section with the actual config values you expect:
     config_jsonschema = th.PropertiesList(
         th.Property(
             "auth_token",
@@ -22,23 +20,6 @@ class TapGetResponse(Tap):
             required=True,
             secret=True,  # Flag config as protected.
             description="The token to authenticate against the API service",
-        ),
-        th.Property(
-            "project_ids",
-            th.ArrayType(th.StringType),
-            required=True,
-            description="Project IDs to replicate",
-        ),
-        th.Property(
-            "start_date",
-            th.DateTimeType,
-            description="The earliest record date to sync",
-        ),
-        th.Property(
-            "api_url",
-            th.StringType,
-            default="https://api.mysample.com",
-            description="The url for the API service",
         ),
     ).to_dict()
 
@@ -49,10 +30,10 @@ class TapGetResponse(Tap):
             A list of discovered streams.
         """
         return [
-            streams.GroupsStream(self),
-            streams.UsersStream(self),
+            streams.CampaignsStream(self),
+            streams.ContactsStream(self),
         ]
 
 
 if __name__ == "__main__":
-    TapGetResponse.cli()
+    TapGetResponse.cli()  # pylint: disable=E1120

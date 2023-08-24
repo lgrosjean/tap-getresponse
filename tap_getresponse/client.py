@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any, Callable, Iterable
 
 import requests
-from singer_sdk.authenticators import BearerTokenAuthenticator
+from singer_sdk.authenticators import APIKeyAuthenticator
 from singer_sdk.helpers.jsonpath import extract_jsonpath
 from singer_sdk.pagination import BaseAPIPaginator  # noqa: TCH002
 from singer_sdk.streams import RESTStream
@@ -21,24 +21,26 @@ class GetResponseStream(RESTStream):
     @property
     def url_base(self) -> str:
         """Return the API URL root, configurable via tap settings."""
-        # TODO: hardcode a value here, or retrieve it from self.config
-        return "https://api.mysample.com"
+        # TODO: retrieve it from self.config for custom base url or use it by default
+        return "https://api3.getresponse360.pl/v3"
 
     records_jsonpath = "$[*]"  # Or override `parse_response`.
 
     # Set this value or override `get_new_paginator`.
-    next_page_token_jsonpath = "$.next_page"  # noqa: S105
+    # next_page_token_jsonpath = "$.next_page"  # noqa: S105
 
     @property
-    def authenticator(self) -> BearerTokenAuthenticator:
+    def authenticator(self) -> APIKeyAuthenticator:
         """Return a new authenticator object.
 
         Returns:
             An authenticator instance.
         """
-        return BearerTokenAuthenticator.create_for_stream(
+        return APIKeyAuthenticator.create_for_stream(
             self,
-            token=self.config.get("auth_token", ""),
+            key="X-Auth-Token",
+            value=f"api-key {self.config.get('auth_token', '')}",
+            location="header",
         )
 
     @property
@@ -52,9 +54,9 @@ class GetResponseStream(RESTStream):
         if "user_agent" in self.config:
             headers["User-Agent"] = self.config.get("user_agent")
         # If not using an authenticator, you may also provide inline auth headers:
-        # headers["Private-Token"] = self.config.get("auth_token")  # noqa: ERA001
         return headers
 
+    # TODO
     def get_new_paginator(self) -> BaseAPIPaginator:
         """Create a new pagination helper instance.
 

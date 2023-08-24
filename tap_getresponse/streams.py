@@ -3,64 +3,134 @@
 from __future__ import annotations
 
 import typing as t
-from pathlib import Path
 
 from singer_sdk import typing as th  # JSON Schema typing helpers
 
 from tap_getresponse.client import GetResponseStream
 
-# TODO: Delete this is if not using json files for schema definition
-SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
-# TODO: - Override `UsersStream` and `GroupsStream` with your own stream definition.
-#       - Copy-paste as many times as needed to create multiple stream types.
 
+class CampaignsStream(GetResponseStream):
+    """Get a list of campaigns"""
 
-class UsersStream(GetResponseStream):
-    """Define custom stream."""
-
-    name = "users"
-    path = "/users"
-    primary_keys: t.ClassVar[list[str]] = ["id"]
-    replication_key = None
-    # Optionally, you may also use `schema_filepath` in place of `schema`:
-    # schema_filepath = SCHEMAS_DIR / "users.json"  # noqa: ERA001
+    name = "campaigns"
+    path = "/campaigns"
+    primary_keys: t.ClassVar[list[str]] = ["campaignId"]
     schema = th.PropertiesList(
-        th.Property("name", th.StringType),
         th.Property(
-            "id",
+            "description",
             th.StringType,
-            description="The user's system ID",
+            description="same as the campaign name, kept for compatibility reasons",
         ),
         th.Property(
-            "age",
-            th.IntegerType,
-            description="The user's age in years",
+            "campaignId",
+            th.StringType,
+            description="Campaign ID",
+        ),
+        th.Property(
+            "name",
+            th.StringType,
+            description="The campaign (list) name.",
+        ),
+        th.Property(
+            "techName",
+            th.StringType,
+            description="Unique internal ID of a list used for FTP imports",
+        ),
+        th.Property(
+            "languageCode",
+            th.StringType,
+            description="The campaign language code according to ISO 639-1",
+        ),
+        th.Property(
+            "isDefault",
+            th.BooleanType,
+            description="Is the campaign default",
+        ),
+        th.Property(
+            "createdOn",
+            th.DateTimeType,
+            description="The date of creation",
+        ),
+        th.Property(
+            "href",
+            th.URIType,
+            description="Direct hyperlink to a resource",
+        ),
+    ).to_dict()  # type: ignore
+
+
+class ContactsStream(GetResponseStream):
+    """Get a list of contacts"""
+
+    name = "contacts"
+    path = "/contacts"
+    primary_keys: t.ClassVar[list[str]] = ["contactId"]
+    schema = th.PropertiesList(
+        th.Property(
+            "contactId",
+            th.StringType,
+            required=True,
+        ),
+        th.Property(
+            "name",
+            th.StringType,
+            description="Contact's name",
+        ),
+        th.Property(
+            "origin",
+            th.StringType,
+            # TODO: add enum Enum:"import" "email" "www" "panel" "leads" "sale" "api" "forward" "survey" "iphone" "copy" "landing_page" "website_builder_elegant"
+        ),
+        th.Property(
+            "timeZone",
+            th.StringType,
+            description="The time zone of a contact, uses the time zone database format (https://www.iana.org/time-zones)",
+        ),
+        th.Property(
+            "activities",
+            th.URIType,
+            description="Contact's activities",
+        ),
+        th.Property(
+            "changedOn",
+            th.DateTimeType,
+        ),
+        th.Property(
+            "createdOn",
+            th.DateTimeType,
+        ),
+        th.Property(
+            "campaign",
+            th.ObjectType(
+                th.Property("campaignId", th.StringType, required=True),
+                th.Property("href", th.StringType),
+                th.Property("name", th.StringType),
+            ),
         ),
         th.Property(
             "email",
             th.StringType,
-            description="The user's email address",
+            required=True,
         ),
-        th.Property("street", th.StringType),
-        th.Property("city", th.StringType),
         th.Property(
-            "state",
-            th.StringType,
-            description="State name in ISO 3166-2 format",
+            "scoring",
+            th.NumberType,
+            description="Contact scoring, pass null to remove the score from a contact",
         ),
-        th.Property("zip", th.StringType),
-    ).to_dict()
-
-
-class GroupsStream(GetResponseStream):
-    """Define custom stream."""
-
-    name = "groups"
-    path = "/groups"
-    primary_keys: t.ClassVar[list[str]] = ["id"]
-    replication_key = "modified"
-    schema = th.PropertiesList(
-        th.Property("name", th.StringType),
-        th.Property("id", th.StringType),
-        th.Property("modified", th.DateTimeType),
-    ).to_dict()
+        th.Property(
+            "engagementScore",
+            th.IntegerType,
+            # allowed_values=Enum ...,
+            description="Engagement Score is a feature that presents a visual estimate of a contact's engagement with mailings. The score is based on the contact's interactions with your e-mails. Via API, it's returned in the form of numbers ranging from 1 (Not Engaged) to 5 (Highly Engaged).",
+        ),
+        th.Property(
+            "href",
+            th.StringType,
+            required=True,
+        ),
+        # th.Property(
+        #     "ipAddress",
+        #     th.IPv4Type,
+        #     description="The contact's IP address. IPv4 and IPv6 formats are accepted.",
+        # ),
+    ).to_dict()  # type: ignore
