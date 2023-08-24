@@ -7,8 +7,7 @@ from singer_sdk.testing import get_tap_test_class
 from tap_getresponse.tap import TapGetResponse
 
 SAMPLE_CONFIG = {
-    "start_date": datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d"),
-    # TODO: Initialize minimal tap config
+    "auth_token": "auth_token",
 }
 
 
