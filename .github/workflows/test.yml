@@ -3,7 +3,11 @@
 
 name: Test tap-getresponse
 
-on: [push]
+on:
+  push:
+    paths:
+      - tap_getresponse/**
+      - tests/
 
 jobs:
   pytest:
