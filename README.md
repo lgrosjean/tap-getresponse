@@ -1,8 +1,12 @@
-# tap-getresponse
+# <h1 align="center">Tap-GetResponse</h1>
+
 
 `tap-getresponse` is a Singer tap for GetResponse.
 
+![logo](https://www.ekito.fr/wp-content/uploads/2021/07/getresponse_logo.png)
+
 Built with the [Meltano Tap SDK](https://sdk.meltano.com) for Singer Taps.
+
 
 <!--
 
@@ -24,26 +28,14 @@ pipx install git+https://github.com/ORG_NAME/tap-getresponse.git@main
 
 -->
 
-## Configuration
+## Configuration 📝
 
 ### Accepted Config Options
 
-<!--
-Developer TODO: Provide a list of config options accepted by the tap.
 
-This section can be created by copy-pasting the CLI output from:
-
-```
-tap-getresponse --about --format=markdown
-```
--->
-
-A full list of supported settings and capabilities for this
-tap is available by running:
-
-```bash
-tap-getresponse --about
-```
+| Setting    | Required | Default | Description            |
+| :--------- | :------: | :-----: | :--------------------- |
+| auth_token |   True   |  None   | GetResponse token API. |
 
 ### Configure using environment variables
 
@@ -51,11 +43,15 @@ This Singer tap will automatically import any environment variables within the w
 `.env` if the `--config=ENV` is provided, such that config values will be considered if a matching
 environment variable is set either in the terminal context or in the `.env` file.
 
+
+```
+# .env
+TAP_GETRESPONSE_AUTH_TOKEN=... # your token!
+```
+
 ### Source Authentication and Authorization
 
-<!--
-Developer TODO: If your tap requires special access on the source system, or any special authentication requirements, provide those here.
--->
+To get your API Token, follow the [official documentation](https://apidocs.getresponse.com/v3/authentication).
 
 ## Usage
 
