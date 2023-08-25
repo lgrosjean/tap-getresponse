@@ -1,13 +1,14 @@
 """Tests standard tap features using the built-in SDK tests library."""
 
 import datetime
+import os
 
 from singer_sdk.testing import get_tap_test_class
 
 from tap_getresponse.tap import TapGetResponse
 
 SAMPLE_CONFIG = {
-    "auth_token": "auth_token",
+    "auth_token": os.getenv("GETRESPONSE_AUTH_TOKEN"),
 }
 
 
