@@ -31,7 +31,11 @@ class TapGetResponse(Tap):
         """
         return [
             streams.CampaignsStream(self),
+            streams.CampaignDetailsStream(self),
             streams.ContactsStream(self),
+            streams.NewslettersStream(self),
+            streams.NewsletterDetailsStream(self),
+            streams.NewsletterActivitiesStream(self),
         ]
 
 

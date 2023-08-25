@@ -1,0 +1,89 @@
+{
+    "type": "object",
+    "properties": {
+        "newsletterId": {
+            "type": [
+                "string"
+            ],
+            "description": "The newsletter ID"
+        },
+        "name": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "The newsletter name"
+        },
+        "href": {
+            "type": [
+                "string"
+            ],
+            "format": "uri",
+            "description": "Direct hyperlink to a resource"
+        },
+        "type": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "The newsletter type"
+        },
+        "status": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "The newsletter status"
+        },
+        "subject": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "description": "The message subject"
+        },
+        "createdOn": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time",
+            "description": "The creation date"
+        },
+        "sendOn": {
+            "type": [
+                "string",
+                "null"
+            ],
+            "format": "date-time",
+            "description": "The scheduled send date and time for the newsletter in the ISO 8601 format."
+        },
+        "content": {
+            "type": [
+                "object",
+                "null"
+            ],
+            "properties": {
+                "html": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "The message content in HTML"
+                },
+                "plain": {
+                    "type": [
+                        "string",
+                        "null"
+                    ],
+                    "description": "The plain text equivalent of the message content"
+                }
+            },
+            "description": "The message content."
+        }
+    },
+    "required": [
+        "newsletterId",
+        "href"
+    ]
+}
