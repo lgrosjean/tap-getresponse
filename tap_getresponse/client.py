@@ -2,17 +2,37 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-from typing import Any, Callable, Iterable
+import typing as t
 
 import requests
 from singer_sdk.authenticators import APIKeyAuthenticator
 from singer_sdk.helpers.jsonpath import extract_jsonpath
-from singer_sdk.pagination import BaseAPIPaginator  # noqa: TCH002
+from singer_sdk.pagination import BasePageNumberPaginator
 from singer_sdk.streams import RESTStream
 
-_Auth = Callable[[requests.PreparedRequest], requests.PreparedRequest]
-SCHEMAS_DIR = Path(__file__).parent / Path("./schemas")
+
+class GetResponsePaginator(BasePageNumberPaginator):
+    """
+    Source: https://sdk.meltano.com/en/latest/classes/singer_sdk.pagination.BasePageNumberPaginator.html
+    """
+
+    start_value = 1
+
+    def __init__(self):
+        super().__init__(start_value=self.start_value)
+
+    def get_next(self, response) -> int | None:
+        if "currentPage" in response.headers:
+            current_page = response.headers["CurrentPage"]
+            return int(current_page) + 1
+        return None
+
+    def has_more(self, response) -> bool:
+        if "currentPage" in response.headers:
+            current_page = int(response.headers["CurrentPage"])
+            total_pages = int(response.headers["TotalPages"])
+            return current_page < total_pages
+        return False
 
 
 class GetResponseStream(RESTStream):
@@ -56,27 +76,21 @@ class GetResponseStream(RESTStream):
         # If not using an authenticator, you may also provide inline auth headers:
         return headers
 
-    # TODO
-    def get_new_paginator(self) -> BaseAPIPaginator:
+    def get_new_paginator(self) -> GetResponsePaginator:
         """Create a new pagination helper instance.
 
-        If the source API can make use of the `next_page_token_jsonpath`
-        attribute, or it contains a `X-Next-Page` header in the response
-        then you can remove this method.
-
-        If you need custom pagination that uses page numbers, "next" links, or
-        other approaches, please read the guide: https://sdk.meltano.com/en/v0.25.0/guides/pagination-classes.html.
+        https://sdk.meltano.com/en/v0.25.0/guides/pagination-classes.html#how-to-migrate
 
         Returns:
             A pagination helper instance.
         """
-        return super().get_new_paginator()
+        return GetResponsePaginator()
 
     def get_url_params(
         self,
         context: dict | None,  # noqa: ARG002
-        next_page_token: Any | None,  # noqa: ANN401
-    ) -> dict[str, Any]:
+        next_page_token: t.Any | None,  # noqa: ANN401
+    ) -> dict[str, t.Any]:
         """Return a dictionary of values to be used in URL parameterization.
 
         Args:
@@ -87,6 +101,7 @@ class GetResponseStream(RESTStream):
             A dictionary of URL query parameters.
         """
         params: dict = {}
+        params["perPage"] = self.config.get("per_page", 1000)
         if next_page_token:
             params["page"] = next_page_token
         if self.replication_key:
@@ -97,7 +112,7 @@ class GetResponseStream(RESTStream):
     def prepare_request_payload(
         self,
         context: dict | None,  # noqa: ARG002
-        next_page_token: Any | None,  # noqa: ARG002, ANN401
+        next_page_token: t.Any | None,  # noqa: ARG002, ANN401
     ) -> dict | None:
         """Prepare the data payload for the REST API request.
 
@@ -113,7 +128,7 @@ class GetResponseStream(RESTStream):
         # TODO: Delete this method if no payload is required. (Most REST APIs.)
         return None
 
-    def parse_response(self, response: requests.Response) -> Iterable[dict]:
+    def parse_response(self, response: requests.Response) -> t.Iterable[dict]:
         """Parse the response and return an iterator of result records.
 
         Args:

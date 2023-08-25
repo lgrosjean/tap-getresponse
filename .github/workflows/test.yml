@@ -3,7 +3,11 @@
 
 name: Test tap-getresponse
 
-on: [push]
+on:
+  push:
+    paths:
+      - tap_getresponse/**
+      - tests/
 
 jobs:
   pytest:
@@ -26,5 +30,7 @@ jobs:
       run: |
         poetry install
     - name: Test with pytest
+      env:
+        TAP_GETRESPONSE_AUTH_TOKEN: ${{ secrets.TAP_GETRESPONSE_AUTH_TOKEN }}
       run: |
         poetry run pytest

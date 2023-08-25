@@ -1,0 +1,58 @@
+{
+    "type": "object",
+    "properties": {
+        "newsletterId": {
+            "type": [
+                "string"
+            ]
+        },
+        "activities": {
+            "type": [
+                "array",
+                "null"
+            ],
+            "items": {
+                "type": "object",
+                "properties": {
+                    "activity": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+                    "createdOn": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "contact": {
+                        "type": [
+                            "object",
+                            "null"
+                        ],
+                        "properties": {
+                            "contactId": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ]
+                            },
+                            "href": {
+                                "type": [
+                                    "string",
+                                    "null"
+                                ],
+                                "format": "uri"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "newsletterId"
+    ]
+}
