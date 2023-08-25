@@ -26,5 +26,7 @@ jobs:
       run: |
         poetry install
     - name: Test with pytest
+      env:
+        TAP_GETRESPONSE_AUTH_TOKEN: ${{ secrets.TAP_GETRESPONSE_AUTH_TOKEN }}
       run: |
         poetry run pytest
