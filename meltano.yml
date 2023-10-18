@@ -1,9 +1,17 @@
 version: 1
 send_anonymous_usage_stats: true
 project_id: tap-getresponse
-default_environment: test
+default_environment: dev
 environments:
-  - name: test
+  - name: dev
+    config:
+      plugins:
+        extractors:
+          - name: tap-getresponse
+            # select:
+            #   - contact_activities.*
+  - name: uat
+  - name: prod
 plugins:
   extractors:
     - name: tap-getresponse
