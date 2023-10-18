@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "tap-getresponse"
-version = "0.0.1"
+version = "0.0.2"
 description = "`tap-getresponse` is a Singer tap for GetResponse, built with the Meltano Singer SDK."
 readme = "README.md"
 authors = ["Leo Grosjean <leo.bigjin@gmail.com>"]

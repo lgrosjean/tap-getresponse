@@ -6,6 +6,7 @@ from singer_sdk import Tap
 from singer_sdk import typing as th  # JSON schema typing helpers
 
 from tap_getresponse import streams
+from tap_getresponse.client import GetResponseStream
 
 
 class TapGetResponse(Tap):
@@ -23,7 +24,7 @@ class TapGetResponse(Tap):
         ),
     ).to_dict()
 
-    def discover_streams(self) -> list[streams.GetResponseStream]:
+    def discover_streams(self) -> list[GetResponseStream]:
         """Return a list of discovered streams.
 
         Returns:
@@ -33,9 +34,13 @@ class TapGetResponse(Tap):
             streams.CampaignsStream(self),
             streams.CampaignDetailsStream(self),
             streams.ContactsStream(self),
+            streams.ContactDetailsStream(self),
+            streams.ContactActivitiesStream(self),
             streams.NewslettersStream(self),
             streams.NewsletterDetailsStream(self),
             streams.NewsletterActivitiesStream(self),
+            streams.WebinarsStream(self),
+            streams.SmsStream(self),
         ]
 
 

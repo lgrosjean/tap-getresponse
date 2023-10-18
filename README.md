@@ -57,12 +57,51 @@ To get your API Token, follow the [official documentation](https://apidocs.getre
 
 You can easily run `tap-getresponse` by itself or in a pipeline using [Meltano](https://meltano.com/).
 
-### Executing the Tap Directly
+
+### Execute in a Meltano pipeline
+
+#### Install the project
 
 ```bash
-tap-getresponse --version
-tap-getresponse --help
-tap-getresponse --config CONFIG --discover > ./catalog.json
+meltano install
+```
+
+#### Select Entities and Attributes to Extract
+
+```bash
+meltano select tap-getresponse <entity> <attribute>
+meltano select tap-getresponse --exclude <entity> <attribute>
+
+# For example:
+meltano select tap-getresponse webinars "*"
+```
+
+Verify that only the intended entities and attributes are now selected using `meltano select --list`:
+```bash
+meltano select tap-getresponse --list
+```
+
+#### Run the pipeline
+
+Run your newly added GetResponse extractor and chosen loader in a pipeline using `meltano run`:
+```bash
+meltano run tap-getresponse <loader>
+
+# For example:
+meltano run tap-getresponse target-jsonl
+```
+
+There is also the `meltano elt` (or `meltano el`) command which is a more rigid command for running only EL pipelines.
+
+Or directly using the `meltano invoke`, which only executes a single plugin at a time. This can be useful for debugging the extractor (`meltano invoke tap-getresponse`).
+
+```bash
+# Test invocation:
+meltano invoke tap-getresponse --version
+# OR run a test `elt` pipeline:
+meltano elt tap-getresponse <loader>
+# Example
+meltano elt tap-getresponse target-jsonl
 ```
 
 ## Developer Resources
@@ -112,14 +151,6 @@ cd tap-getresponse
 meltano install
 ```
 
-Now you can test and orchestrate using Meltano:
-
-```bash
-# Test invocation:
-meltano invoke tap-getresponse --version
-# OR run a test `elt` pipeline:
-meltano elt tap-getresponse target-jsonl
-```
 
 ### SDK Dev Guide
 
