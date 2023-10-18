@@ -7,7 +7,7 @@ from singer_sdk.testing import get_tap_test_class
 from tap_getresponse.tap import TapGetResponse
 
 SAMPLE_CONFIG = {
-    "auth_token": os.getenv("GETRESPONSE_AUTH_TOKEN"),
+    "auth_token": os.getenv("TAP_GETRESPONSE_AUTH_TOKEN"),
 }
 
 
