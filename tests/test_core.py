@@ -1,8 +1,9 @@
-"""Tests standard tap features using the built-in SDK tests library."""
+"""Tests standard tap features using the built-in SDK tests library
+
+Source: https://github.com/meltano/sdk/blob/main/singer_sdk/testing/tap_tests.py
+"""
 
 import os
-
-from singer_sdk.testing import get_tap_test_class
 
 from tap_getresponse.tap import TapGetResponse
 
@@ -10,12 +11,19 @@ SAMPLE_CONFIG = {
     "auth_token": os.getenv("TAP_GETRESPONSE_AUTH_TOKEN"),
 }
 
-
-# Run standard built-in tap tests from the SDK:
-TestTapGetResponse = get_tap_test_class(
-    tap_class=TapGetResponse,
-    config=SAMPLE_CONFIG,
-)
+tap = TapGetResponse(config=SAMPLE_CONFIG)
 
 
-# TODO: Create additional tests as appropriate for your tap.
+def test_tap_cli_prints() -> None:
+    """Test that the tap is able to print standard metadata."""
+    tap.print_version()
+    tap.print_about()
+    tap.print_about(output_format="json")
+
+
+def test_tap_stream_connection() -> None:
+    """
+    Test that the tap can connect to each stream.
+    Run connection test, aborting each stream after 1 record.
+    """
+    tap.run_connection_test()
