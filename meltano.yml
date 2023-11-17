@@ -8,9 +8,9 @@ environments:
       plugins:
         extractors:
           - name: tap-getresponse
-            # select:
-            #   - contact_activities.*
-  - name: uat
+            select:
+              - webinars.*
+              - newsletters.*
   - name: prod
 plugins:
   extractors:
@@ -23,8 +23,10 @@ plugins:
         - discover
         - about
         - stream-maps
-      config:
-        auth_token: $VAR
+      settings:
+        - name: auth_token
+          kind: password
+          description: GetResponse auth token
   loaders:
     - name: target-jsonl
       variant: andyh1203
